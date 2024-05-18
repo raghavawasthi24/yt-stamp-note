@@ -1,58 +1,88 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
-import React from "react";
-import { CiCirclePlus } from "react-icons/ci";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { FaTelegramPlane } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+
+const FormSchema = z.object({
+  id: z.string().min(2, {
+    message: "Enter valid id",
+  }),
+});
 
 export default function page() {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      id: "",
+    },
+  });
+
+  const router = useRouter();
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    const videoId = data.id;
+    const apiKey = "AIzaSyAxJ14uTaFCLaERjuFxmY1EJsjJYV76dK4";
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
+
+    console.log(apiUrl);
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.items.length > 0) {
+          const videoDetails = data.items[0].snippet;
+          console.log("Video Details:", videoDetails);
+          router.push(`/${videoId}`);
+          // console.log("Title:", videoDetails.title);
+          // console.log("Description:", videoDetails.description);
+          // console.log("Published At:", videoDetails.publishedAt);
+        } else {
+          console.log("No video found with the provided ID.");
+        }
+      })
+      .catch((error) => console.error("Error fetching video details:", error));
+  }
   return (
-    <div>
-      <h1 className="text-xl font-semibold p-8">Video Player with Notes</h1>
-      <div className="px-8 flex flex-col gap-8">
-        <iframe
-          width="100%"
-          height="615"
-          src="https://www.youtube.com/embed/GmIsmQ0cHxg?si=8yi3yRS_ysyNacGL"
-          title="YouTube video player"
-          // frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          // referrerpolicy="strict-origin-when-cross-origin"
-          // allowfullscreen={true}
-        ></iframe>
-        <div className="flex flex-col gap-2 pb-4 border-b">
-          <p className="text-lg font-semibold">Video title goes here</p>
-          <p>This is the description of the video</p>
-        </div>
-
-        <div className="grid gap-6 border p-6 rounded-xl">
-          <div className="flex justify-between items-center pb-4 border-b">
-            <div className="flex flex-col gap-2">
-              <p className="text-lg font-semibold">My notes</p>
-              <p>
-                All your notes at a single place. Click on any note to go to
-                specific timestamp in the video.
-              </p>
-            </div>
-            <Button variant="outline" className="font-semibold">
-              <CiCirclePlus className="w-5 h-5 mr-2" />
-              Add new note
-            </Button>
-          </div>
-
-          <div className="flex flex-col gap-4 ">
-            <div>
-              <p>12 May ‘24</p>
-              <p>Timestamp: 01 min 30 sec</p>
-            </div>
-            <p className="border p-3 rounded-r-lg rounded-b-lg">
-              This is my first note.
-            </p>
-
-            <div className="self-end grid grid-cols-2 gap-2">
-              <Button variant="outline">Delete</Button>
-              <Button variant="outline">Edit</Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full h-screen flex flex-col justify-center items-center gap-8 bg-slate-100"
+      >
+        <p className="text-6xl font-bold">Make notes with Video Player</p>
+        <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Youtube Video ID</FormLabel>
+              <FormControl>
+                <Input placeholder="ID" {...field} className="w-[500px]" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">
+          <FaTelegramPlane className="w-5 h-5 mr-2" />
+          Search
+        </Button>
+      </form>
+    </Form>
   );
 }
