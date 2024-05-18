@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+
 
 const FormSchema = z.object({
   id: z.string().min(2, {
@@ -48,7 +48,9 @@ export default function page() {
         if (data.items.length > 0) {
           const videoDetails = data.items[0].snippet;
           console.log("Video Details:", videoDetails);
-          router.push(`/${videoId}`);
+          localStorage.setItem("title", JSON.stringify(videoDetails.title));
+          localStorage.setItem("description", JSON.stringify(videoDetails.description));
+           router.push(`/${videoId}`);
           // console.log("Title:", videoDetails.title);
           // console.log("Description:", videoDetails.description);
           // console.log("Published At:", videoDetails.publishedAt);
