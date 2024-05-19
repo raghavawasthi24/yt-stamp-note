@@ -28,7 +28,7 @@ export default function page({ params }: { params: { videoId: string } }) {
       playerRef.current = new window.YT.Player("player", {
         height: "515",
         width: "100%",
-        videoId: videoId,
+        videoId: `${videoId}`,
         playerVars: {
           playsinline: 1,
         },
@@ -59,13 +59,19 @@ export default function page({ params }: { params: { videoId: string } }) {
     }
   }
 
+   const seekTo = (timee:any) => {
+     if (playerRef.current && playerRef.current.seekTo) {
+       playerRef.current.seekTo(timee, true); // Seek to the specified time and play the video
+     }
+   };
+
   return (
     <div>
       <h1 className="text-xl font-semibold p-8">Video Player with Notes</h1>
       <div className="px-8 flex flex-col gap-8">
         <div id="player"></div>
         <VideoDesc title={title} description={description} />
-        <Notes addNote={addNote} timestamp={timestamp} videoId={videoId}/>
+        <Notes addNote={addNote} timestamp={timestamp} videoId={videoId} seekTo={seekTo}/>
       </div>
     </div>
   );

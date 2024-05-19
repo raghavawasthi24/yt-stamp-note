@@ -4,8 +4,9 @@ import { formatDate } from "@/services/formatDate";
 import React, { useEffect, useRef, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import NotesCard from "./notes-card";
+import { nanoid } from "nanoid";
 
-export default function Notes({ addNote, timestamp, videoId }: any) {
+export default function Notes({ addNote, timestamp, videoId, seekTo }: any) {
   const [editing, setEditing] = React.useState(false);
   const [notes, setNotes] = React.useState("");
   const [formattedTimestamp, setFormattedTimestamp] = React.useState("00:00");
@@ -15,19 +16,36 @@ export default function Notes({ addNote, timestamp, videoId }: any) {
   });
   const [currentDay, setCurrentDay] = React.useState<string>("");
 
-  const formatTimestamp = (seconds: number):string => {
+  const formatTimestamp = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${String(minutes).padStart(2, "0")} min ${String(
-        remainingSeconds
-      ).padStart(2, "0")} sec`
-  ;
+      remainingSeconds
+    ).padStart(2, "0")} sec`;
   };
 
-  function saveNote() {
-    videoNotes?.push({ notes, timestamp, currentDay });
-    localStorage.setItem(videoId, JSON.stringify(videoNotes));
-    setEditing(false);
+  function saveNote(id?: string, notes?: string) {
+    videoNotes.forEach((note: any) => {
+      if (note.nano === id) {
+        note.notes = notes;
+        localStorage.setItem(videoId, JSON.stringify(videoNotes));
+        setEditing(false);
+        setNotes("");
+      }
+    });
+    if (!id) {
+      const nano = nanoid();
+      videoNotes?.push({ nano, notes, timestamp, currentDay });
+      localStorage.setItem(videoId, JSON.stringify(videoNotes));
+      setEditing(false);
+      setNotes("");
+    }
+  }
+
+  function deleteNote(id: string) {
+    const newNotes = videoNotes.filter((note: any) => note.nano !== id);
+    localStorage.setItem(videoId, JSON.stringify(newNotes));
+    setVideoNotes(newNotes);
   }
 
   return (
@@ -69,10 +87,15 @@ export default function Notes({ addNote, timestamp, videoId }: any) {
           <Editor notes={notes} setNotes={setNotes} />
 
           <div className="self-end grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setEditing(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditing(false), setNotes("");
+              }}
+            >
               Cancel
             </Button>
-            <Button variant="outline" onClick={saveNote}>
+            <Button variant="outline" onClick={() => saveNote("", notes)}>
               Save
             </Button>
           </div>
@@ -80,7 +103,12 @@ export default function Notes({ addNote, timestamp, videoId }: any) {
       ) : null}
 
       {videoNotes?.map((note: any, index: number) => (
-        <NotesCard note={note} />
+        <NotesCard
+          note={note}
+          seekTo={seekTo}
+          saveNote={saveNote}
+          deleteNote={deleteNote}
+        />
       ))}
     </div>
   );
