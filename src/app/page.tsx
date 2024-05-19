@@ -14,10 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FormSchema = z.object({
   id: z.string().min(2, {
@@ -49,10 +49,14 @@ export default function Page() {
           const videoDetails = data.items[0].snippet;
           console.log("Video Details:", videoDetails);
           localStorage.setItem("title", JSON.stringify(videoDetails.title));
-          localStorage.setItem("description", JSON.stringify(videoDetails.description));
-           router.push(`/${videoId}`);
+          localStorage.setItem(
+            "description",
+            JSON.stringify(videoDetails.description)
+          );
+          toast.success("Redirecting to notes page.");
+          router.push(`/${videoId}`);
         } else {
-          console.log("No video found with the provided ID.");
+          toast.error("No video found with the provided ID.");
         }
       })
       .catch((error) => console.error("Error fetching video details:", error));
@@ -82,6 +86,7 @@ export default function Page() {
           Search
         </Button>
       </form>
+      <ToastContainer />
     </Form>
   );
 }

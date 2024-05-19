@@ -17,25 +17,27 @@ interface PageProps {
   };
 }
 
- declare global {
-   interface Window {
-     YT: any;
-   }
- }
+declare global {
+  interface Window {
+    YT: any;
+  }
+}
 
 const Page: React.FC<PageProps> = ({ params }) => {
   const { videoId } = params;
-  const title = localStorage.getItem("title") || "Default Title";
-  const description =
-    localStorage.getItem("description") || "Default Description";
-
+  const [title, setTitle] = useState("Default Title");
+  const [description, setDescription] = useState("Default Description");
   const [timestamp, setTimestamp] = useState<number | null>(null);
   const playerRef = useRef<Player | null>(null);
 
   useEffect(() => {
-    const initializePlayer = () => {
-     
+     const storedTitle = localStorage.getItem("title");
+     const storedDescription = localStorage.getItem("description");
 
+     if (storedTitle) setTitle(storedTitle);
+     if (storedDescription) setDescription(storedDescription);
+
+    const initializePlayer = () => {
       if (window.YT && window.YT.Player) {
         playerRef.current = new window.YT.Player("player", {
           height: "515",
