@@ -17,6 +17,12 @@ interface PageProps {
   };
 }
 
+ declare global {
+   interface Window {
+     YT: any;
+   }
+ }
+
 const Page: React.FC<PageProps> = ({ params }) => {
   const { videoId } = params;
   const title = localStorage.getItem("title") || "Default Title";
@@ -28,6 +34,8 @@ const Page: React.FC<PageProps> = ({ params }) => {
 
   useEffect(() => {
     const initializePlayer = () => {
+     
+
       if (window.YT && window.YT.Player) {
         playerRef.current = new window.YT.Player("player", {
           height: "515",
