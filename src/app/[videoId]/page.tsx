@@ -3,17 +3,27 @@ import React, { useEffect, useRef, useState } from "react";
 import VideoDesc from "./components/about-video";
 import Notes from "./components/notes";
 
+// Define the Player interface with the methods we will use
 interface Player {
-  getCurrentTime: () => any;
+  getCurrentTime: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+  destroy: () => void;
 }
 
-export default function page({ params }: { params: { videoId: string } }) {
-  const videoId = params.videoId;
-  const title = localStorage.getItem("title");
-  const description = localStorage.getItem("description");
+// Define the props for the page component
+interface PageProps {
+  params: {
+    videoId: string;
+  };
+}
 
-  const [time, setTime] = useState(0);
-  const [timestamp, setTimestamp] = useState(null);
+const Page: React.FC<PageProps> = ({ params }) => {
+  const videoId = params.videoId;
+  const title = localStorage.getItem("title") || "Default Title";
+  const description =
+    localStorage.getItem("description") || "Default Description";
+
+  const [timestamp, setTimestamp] = useState<number | null>(null);
   const playerRef = useRef<Player | null>(null);
 
   useEffect(() => {
@@ -24,8 +34,8 @@ export default function page({ params }: { params: { videoId: string } }) {
     firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
     // Initialize YouTube Player
-    window.onYouTubeIframeAPIReady = () => {
-      playerRef.current = new window.YT.Player("player", {
+    (window as any).onYouTubeIframeAPIReady = () => {
+      playerRef.current = new (window as any).YT.Player("player", {
         height: "515",
         width: "100%",
         videoId: `${videoId}`,
@@ -48,22 +58,20 @@ export default function page({ params }: { params: { videoId: string } }) {
         playerRef.current.destroy();
       }
     };
-  }, []);
+  }, [videoId]);
 
-  function addNote() {
-    console.log("Adding note");
-    if (playerRef.current && playerRef.current.getCurrentTime) {
+  const addNote = () => {
+    if (playerRef.current) {
       const currentTime = playerRef.current.getCurrentTime();
-      console.log(currentTime);
       setTimestamp(currentTime);
     }
-  }
+  };
 
-   const seekTo = (timee:any) => {
-     if (playerRef.current && playerRef.current.seekTo) {
-       playerRef.current.seekTo(timee, true); // Seek to the specified time and play the video
-     }
-   };
+  const seekTo = (time: number) => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(time, true);
+    }
+  };
 
   return (
     <div>
@@ -71,8 +79,15 @@ export default function page({ params }: { params: { videoId: string } }) {
       <div className="px-8 flex flex-col gap-8">
         <div id="player"></div>
         <VideoDesc title={title} description={description} />
-        <Notes addNote={addNote} timestamp={timestamp} videoId={videoId} seekTo={seekTo}/>
+        <Notes
+          addNote={addNote}
+          timestamp={timestamp || 0}
+          videoId={videoId}
+          seekTo={seekTo}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default Page;
