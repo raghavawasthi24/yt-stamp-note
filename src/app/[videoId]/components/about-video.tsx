@@ -11,7 +11,7 @@ export default function VideoDesc({ title, description }: any) {
     <div className="flex flex-col gap-2 pb-4 border-b">
       <p className="text-lg font-semibold">{title}</p>
       <p className={`transition-all ${isExpanded ? "" : "line-clamp-2"}`}>
-        {convertNewlineSymbols(description)}
+        {description}
       </p>
       <button
         onClick={toggleExpanded}
