@@ -1,4 +1,4 @@
-import "./MenuBar.scss";
+import "./Menubar.scss";
 import React, { Fragment } from "react";
 import { Editor } from "@tiptap/react";
 import MenuItem from "./MenuItem";
