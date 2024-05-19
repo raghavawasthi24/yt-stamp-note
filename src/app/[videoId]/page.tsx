@@ -18,7 +18,7 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ params }) => {
-  const videoId = params.videoId;
+  const { videoId } = params;
   const title = localStorage.getItem("title") || "Default Title";
   const description =
     localStorage.getItem("description") || "Default Description";
@@ -27,26 +27,48 @@ const Page: React.FC<PageProps> = ({ params }) => {
   const playerRef = useRef<Player | null>(null);
 
   useEffect(() => {
-    // Load YouTube IFrame API script
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName("script")[0];
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-
-    // Initialize YouTube Player
-    (window as any).onYouTubeIframeAPIReady = () => {
-      playerRef.current = new (window as any).YT.Player("player", {
-        height: "515",
-        width: "100%",
-        videoId: `${videoId}`,
-        playerVars: {
-          playsinline: 1,
-        },
-        events: {
-          onReady: onPlayerReady,
-        },
-      });
+    const initializePlayer = () => {
+      if (window.YT && window.YT.Player) {
+        playerRef.current = new window.YT.Player("player", {
+          height: "515",
+          width: "100%",
+          videoId: videoId,
+          playerVars: {
+            playsinline: 1,
+          },
+          events: {
+            onReady: onPlayerReady,
+          },
+        });
+      } else {
+        console.error("YouTube IFrame API or Player not available.");
+      }
     };
+
+    const onYouTubeIframeAPIReady = () => {
+      initializePlayer();
+    };
+
+    if (!window.YT) {
+      // Load YouTube IFrame API script
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      tag.onload = () => {
+        if (window.YT && window.YT.Player) {
+          initializePlayer();
+        } else {
+          console.error("YouTube IFrame API or Player not available.");
+        }
+      };
+      tag.onerror = () => {
+        console.error("Failed to load YouTube IFrame API script.");
+      };
+      document.body.appendChild(tag);
+    } else if (window.YT && window.YT.Player) {
+      initializePlayer();
+    } else {
+      console.error("YouTube IFrame API or Player not available.");
+    }
 
     function onPlayerReady(event: any) {
       // Player is ready

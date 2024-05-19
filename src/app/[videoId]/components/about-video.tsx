@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { convertNewlineSymbols } from "@/services/symbolEliminator";
+import React, { useState } from "react";
 
-export default function VideoDesc({title, description}:any) {
-    
+export default function VideoDesc({ title, description }: any) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -11,7 +11,7 @@ export default function VideoDesc({title, description}:any) {
     <div className="flex flex-col gap-2 pb-4 border-b">
       <p className="text-lg font-semibold">{title}</p>
       <p className={`transition-all ${isExpanded ? "" : "line-clamp-2"}`}>
-        {description}
+        {convertNewlineSymbols(description)}
       </p>
       <button
         onClick={toggleExpanded}
