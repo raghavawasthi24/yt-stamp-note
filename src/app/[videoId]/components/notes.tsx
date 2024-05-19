@@ -1,8 +1,35 @@
-import { Button } from '@/components/ui/button';
-import React from 'react'
-import { CiCirclePlus } from 'react-icons/ci';
+import Editor from "@/components/Editor";
+import { Button } from "@/components/ui/button";
+import { formatDate } from "@/services/formatDate";
+import React, { useEffect, useRef, useState } from "react";
+import { CiCirclePlus } from "react-icons/ci";
+import NotesCard from "./notes-card";
 
-export default function Notes() {
+export default function Notes({ addNote, timestamp, videoId }: any) {
+  const [editing, setEditing] = React.useState(false);
+  const [notes, setNotes] = React.useState("");
+  const [formattedTimestamp, setFormattedTimestamp] = React.useState("00:00");
+  const [videoNotes, setVideoNotes] = React.useState<any>(() => {
+    const storedNotes = localStorage.getItem(videoId);
+    return storedNotes ? JSON.parse(storedNotes) : [];
+  });
+  const [currentDay, setCurrentDay] = React.useState<string>("");
+
+  const formatTimestamp = (seconds: number):string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${String(minutes).padStart(2, "0")} min ${String(
+        remainingSeconds
+      ).padStart(2, "0")} sec`
+  ;
+  };
+
+  function saveNote() {
+    videoNotes?.push({ notes, timestamp, currentDay });
+    localStorage.setItem(videoId, JSON.stringify(videoNotes));
+    setEditing(false);
+  }
+
   return (
     <div className="grid gap-6 border p-6 rounded-xl">
       <div className="flex justify-between items-center pb-4 border-b">
@@ -13,26 +40,48 @@ export default function Notes() {
             specific timestamp in the video.
           </p>
         </div>
-        <Button variant="outline" className="font-semibold">
+        <Button
+          variant="outline"
+          className="font-semibold"
+          onClick={() => {
+            formatTimestamp(timestamp),
+              setCurrentDay(formatDate(new Date())),
+              addNote(),
+              setEditing(true);
+          }}
+        >
           <CiCirclePlus className="w-5 h-5 mr-2" />
           Add new note
         </Button>
       </div>
 
-      <div className="flex flex-col gap-4 ">
-        <div>
-          <p>12 May ‘24</p>
-          <p>Timestamp: 01 min 30 sec</p>
-        </div>
-        <p className="border p-3 rounded-r-lg rounded-b-lg">
-          This is my first note.
-        </p>
+      {editing ? (
+        <div className="flex flex-col gap-4">
+          <div>
+            <p>{formatDate(new Date())}</p>
+            <p>
+              Timestamp :{" "}
+              <span className="text-purple-700">
+                {formatTimestamp(timestamp)}
+              </span>
+            </p>
+          </div>
+          <Editor notes={notes} setNotes={setNotes} />
 
-        <div className="self-end grid grid-cols-2 gap-2">
-          <Button variant="outline">Delete</Button>
-          <Button variant="outline">Edit</Button>
+          <div className="self-end grid grid-cols-2 gap-2">
+            <Button variant="outline" onClick={() => setEditing(false)}>
+              Cancel
+            </Button>
+            <Button variant="outline" onClick={saveNote}>
+              Save
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : null}
+
+      {videoNotes?.map((note: any, index: number) => (
+        <NotesCard note={note} />
+      ))}
     </div>
   );
 }

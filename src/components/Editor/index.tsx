@@ -15,7 +15,7 @@ interface User {
   color: string;
 }
 
-const Editor: React.FC = () => {
+const Editor = ({notes, setNotes}:any) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ history: false }),
@@ -24,12 +24,17 @@ const Editor: React.FC = () => {
       TaskItem,
       CharacterCount.configure({ limit: 10000 }),
     ],
+    content: `${notes}`,
+    onUpdate: ({ editor }) => {
+      console.log(editor.getHTML());
+      setNotes(editor.getHTML());
+    }
   });
 
   return (
     <div className="editor">
       {editor && <MenuBar editor={editor} />}
-      <EditorContent className="editor__content outline-none" editor={editor} />
+      <EditorContent className="editor__content outline-none" editor={editor}/>
     </div>
   );
 };
