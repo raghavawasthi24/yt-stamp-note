@@ -3,6 +3,7 @@ import React from "react";
 import Iframe from "./components/Iframe";
 import VideoDesc from "./components/about-video";
 import Notes from "./components/notes";
+import Editor from "@/components/Editor";
 
 export default function page({ params }: { params: { videoId: string } }) {
   
@@ -17,6 +18,8 @@ export default function page({ params }: { params: { videoId: string } }) {
         <Iframe />
         <VideoDesc title={title} description={description} />
         <Notes />
+
+        <Editor />
       </div>
     </div>
   );

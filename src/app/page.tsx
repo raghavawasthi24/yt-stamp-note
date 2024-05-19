@@ -51,9 +51,6 @@ export default function page() {
           localStorage.setItem("title", JSON.stringify(videoDetails.title));
           localStorage.setItem("description", JSON.stringify(videoDetails.description));
            router.push(`/${videoId}`);
-          // console.log("Title:", videoDetails.title);
-          // console.log("Description:", videoDetails.description);
-          // console.log("Published At:", videoDetails.publishedAt);
         } else {
           console.log("No video found with the provided ID.");
         }
