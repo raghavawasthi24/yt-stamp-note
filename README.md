@@ -1,5 +1,5 @@
 ## Overview
-This website provides you the functionality of creating notes at particular timestamp. The notes are saved permanently but you can edit and delete them too. In order to enhance text of notes, editor is provided. You can bold, italic, highlight your text.
+This website provides you the functionality of creating notes at particular timestamp. The notes are saved permanently but you can edit and delete them too. In order to enhance text of notes, editor is provided. You can bold, italic, highlight, etc your text.
 
 DEPLOYED LINK: https://yt-stamp-note.vercel.app/
 
