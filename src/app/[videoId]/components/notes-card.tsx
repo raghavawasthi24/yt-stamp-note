@@ -41,7 +41,7 @@ const NotesCard: React.FC<NotesCardProps> = ({
         <div className="flex flex-col gap-4">
           <Editor notes={notes} setNotes={setNotes} />
           <div className="self-end grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setEditing(false)}>
+            <Button variant="outline" onClick={() => {setEditing(false)}}>
               Cancel
             </Button>
             <Button

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import VideoDesc from "./components/about-video";
 import Notes from "./components/notes";
+import Iframe from "./components/Iframe";
 
 // Define the Player interface with the methods we will use
 interface Player {
@@ -25,72 +26,16 @@ declare global {
 
 const Page: React.FC<PageProps> = ({ params }) => {
   const { videoId } = params;
-  const [title, setTitle] = useState("Default Title");
-  const [description, setDescription] = useState("Default Description");
   const [timestamp, setTimestamp] = useState<number | null>(null);
   const playerRef = useRef<Player | null>(null);
 
-  useEffect(() => {
-     const storedTitle = localStorage.getItem("title");
-     const storedDescription = localStorage.getItem("description");
+  const title = localStorage.getItem("title");
+  const description = localStorage.getItem("description");
 
-     if (storedTitle) setTitle(storedTitle);
-     if (storedDescription) setDescription(storedDescription);
-
-    const initializePlayer = () => {
-      if (window.YT && window.YT.Player) {
-        playerRef.current = new window.YT.Player("player", {
-          height: "515",
-          width: "100%",
-          videoId: videoId,
-          playerVars: {
-            playsinline: 1,
-          },
-          events: {
-            onReady: onPlayerReady,
-          },
-        });
-      } else {
-        console.error("YouTube IFrame API or Player not available.");
-      }
-    };
-
-    const onYouTubeIframeAPIReady = () => {
-      initializePlayer();
-    };
-
-    if (!window.YT) {
-      // Load YouTube IFrame API script
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      tag.onload = () => {
-        if (window.YT && window.YT.Player) {
-          initializePlayer();
-        } else {
-          console.error("YouTube IFrame API or Player not available.");
-        }
-      };
-      tag.onerror = () => {
-        console.error("Failed to load YouTube IFrame API script.");
-      };
-      document.body.appendChild(tag);
-    } else if (window.YT && window.YT.Player) {
-      initializePlayer();
-    } else {
-      console.error("YouTube IFrame API or Player not available.");
-    }
-
-    function onPlayerReady(event: any) {
-      // Player is ready
-    }
-
-    return () => {
-      // Cleanup function to remove YouTube player instance
-      if (playerRef.current) {
-        playerRef.current.destroy();
-      }
-    };
-  }, [videoId]);
+ const handleVideoReady = (event:any) => {
+   playerRef.current = event.target;
+   console.log(playerRef);
+ };
 
   const addNote = () => {
     if (playerRef.current) {
@@ -109,7 +54,10 @@ const Page: React.FC<PageProps> = ({ params }) => {
     <div>
       <h1 className="text-xl font-semibold p-8">Video Player with Notes</h1>
       <div className="px-8 flex flex-col gap-8">
-        <div id="player"></div>
+        <Iframe
+          videoId={videoId}
+          onReady={handleVideoReady}
+        />{" "}
         <VideoDesc title={title} description={description} />
         <Notes
           addNote={addNote}

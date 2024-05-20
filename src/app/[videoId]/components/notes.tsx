@@ -103,7 +103,7 @@ const Notes: React.FC<NotesProps> = ({
           <Editor notes={notes} setNotes={setNotes} />
 
           <div className="self-end grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setEditing(false)}>
+          <Button variant="outline" onClick={() => {setEditing(false),setNotes("")}}>
               Cancel
             </Button>
             <Button variant="outline" onClick={() => saveNote()}>

@@ -65,7 +65,7 @@ export default function Page() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full h-screen flex flex-col justify-center items-center gap-8 bg-slate-100"
+        className="w-full h-screen flex flex-col justify-center items-center gap-8 bg-gradient-to-r from-blue-200 to-green-200"
       >
         <p className="text-6xl font-bold">Make notes with Video Player</p>
         <FormField
