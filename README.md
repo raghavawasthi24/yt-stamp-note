@@ -25,5 +25,5 @@ npm run dev
 2. Put the  ID in the input box and click search.
 3. If it is a vaild ID, you will redirected to notes page.
 4. Now play video and start creating your notes.
-5. "Add new Note" to crrate new note.
+5. "Add new Note" to create new note.
 
