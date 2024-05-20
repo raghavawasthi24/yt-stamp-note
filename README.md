@@ -1,18 +1,21 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Overview
+This website provides you the functionality of creating notes at particular timestamp. The notes are saved permanently but you can edit and delete them too. In order to enhance text of notes, editor is provided. You can bold, italic, highlight your text.
 
-## Getting Started
+## How to run the application
 
-First, run the development server:
-
+#Clone the repository
+```bash
+git clone 
+```
+#Install dependencies
+```bash
+npm install
+```
+#Run the application
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
