@@ -1,11 +1,13 @@
 ## Overview
 This website provides you the functionality of creating notes at particular timestamp. The notes are saved permanently but you can edit and delete them too. In order to enhance text of notes, editor is provided. You can bold, italic, highlight your text.
 
+DEPLOYED LINK: https://yt-stamp-note.vercel.app/
+
 ## How to run the application
 
 #Clone the repository
 ```bash
-git clone 
+git clone https://github.com/raghavawasthi24/yt-stamp-note.git
 ```
 #Install dependencies
 ```bash
@@ -17,23 +19,11 @@ npm run dev
 ```
 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to use the application
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Take the ID of any youtube video.
+2. Put the  ID in the input box and click search.
+3. If it is a vaild ID, you will redirected to notes page.
+4. Now play video and start creating your notes.
+5. "Add new Note" to crrate new note.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
