@@ -4,29 +4,29 @@ const Iframe = ({ videoId, onReady }: any) => {
   const playerRef = useRef(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://www.youtube.com/iframe_api";
-    script.async = true;
-    document.body.appendChild(script);
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.src = "https://www.youtube.com/iframe_api";
+  //   script.async = true;
+  //   document.body.appendChild(script);
 
-    (window as any).onYouTubeIframeAPIReady = () => {
-      playerRef.current = new window.YT.Player("player", {
-        videoId,
-        events: {
-          onReady: onReady,
-        },
-      });
-    };
+  //   (window as any).onYouTubeIframeAPIReady = () => {
+  //     playerRef.current = new window.YT.Player("player", {
+  //       videoId,
+  //       events: {
+  //         onReady: onReady,
+  //       },
+  //     });
+  //   };
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, [videoId, onReady]);
+  //   return () => {
+  //     document.body.removeChild(script);
+  //   };
+  // }, [videoId, onReady]);
 
-  const handleReadMore = () => {
-    setIsExpanded(!isExpanded);
-  };
+  // const handleReadMore = () => {
+  //   setIsExpanded(!isExpanded);
+  // };
 
   return (
       <div
